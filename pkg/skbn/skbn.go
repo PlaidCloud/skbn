@@ -137,8 +137,6 @@ func PerformCopy(srcClient, dstClient interface{}, srcPrefix, dstPrefix string, 
 			pr, pw := nio.Pipe(buf)
 			fileErrorChannel := make(chan error, 1)
 
-			// TODO: make this OPTIONAL, and probably also add a decompress option?
-			// gw := gzip.NewWriter(pw)
 			var gw io.WriteCloser
 			if compress {
 				gw, _ = gzip.NewWriterLevel(pw, gzip.BestCompression)
