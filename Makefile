@@ -31,7 +31,7 @@ push:
 # ifdef TRAVIS
 ifdef DOCKER_USER
 ifdef DOCKER_PASSWORD
-	docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
+	printenv DOCKER_PASSWORD | docker login -u $(DOCKER_USER) --password-stdin https://gcr.io
 	docker push gcr.io/plaidcloud-build/skbn:latest
 	docker push gcr.io/plaidcloud-build/skbn:$(DOCKER_TAG)
 endif
