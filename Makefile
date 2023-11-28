@@ -20,9 +20,9 @@ build: fmt vet
 
 # Build skbn docker image
 docker: fmt vet
-	cp bin/skbn skbn
+	# cp bin/skbn skbn
 	docker build -t gcr.io/plaidcloud-build/skbn:latest .
-	rm skbn
+	# rm skbn
 
 
 # Push will only happen in travis ci
