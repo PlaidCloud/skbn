@@ -21,7 +21,7 @@ build: fmt vet
 # Build skbn docker image
 docker: fmt vet
 	cp bin/skbn skbn
-	docker build -t plaidcloud/skbn:latest .
+	docker build -t gcr.io/plaidcloud-build/skbn:latest .
 	rm skbn
 
 
@@ -31,7 +31,7 @@ ifdef TRAVIS
 ifdef DOCKER_USER
 ifdef DOCKER_PASSWORD
 	docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
-	docker push plaidcloud/skbn:latest
+	docker push gcr.io/plaidcloud-build/skbn:latest
 endif
 endif
 endif
