@@ -4,7 +4,8 @@ LDFLAGS := "-X main.GitTag=${GIT_TAG} -X main.GitCommit=${GIT_COMMIT}"
 DIST := $(CURDIR)/dist
 DOCKER_USER := $(shell printenv DOCKER_USER)
 DOCKER_PASSWORD := $(shell printenv DOCKER_PASSWORD)
-TRAVIS := $(shell printenv TRAVIS)
+# TRAVIS := $(shell printenv TRAVIS)
+DOCKER_TAG := $(shell printenv DOCKER_TAG)
 
 all: build docker push
 
@@ -21,20 +22,21 @@ build: fmt vet
 # Build skbn docker image
 docker: fmt vet
 	# cp bin/skbn skbn
-	docker build -t gcr.io/plaidcloud-build/skbn:latest .
+	docker build -t gcr.io/plaidcloud-build/skbn:latest -t gcr.io/plaidcloud-build/skbn:$(DOCKER_TAG) .
 	# rm skbn
 
 
 # Push will only happen in travis ci
 push:
-ifdef TRAVIS
+# ifdef TRAVIS
 ifdef DOCKER_USER
 ifdef DOCKER_PASSWORD
 	docker login -u $(DOCKER_USER) -p $(DOCKER_PASSWORD)
 	docker push gcr.io/plaidcloud-build/skbn:latest
+	docker push gcr.io/plaidcloud-build/skbn:$(DOCKER_TAG)
 endif
 endif
-endif
+# endif
 
 dist:
 	mkdir -p $(DIST)
