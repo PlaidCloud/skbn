@@ -14,7 +14,7 @@ func main() {
 	bufferSize := 1.0 // 1GB of in memory buffer size
 
 	start := time.Now()
-	if err := skbn.Copy(src, dst, parallel, bufferSize, false); err != nil {
+	if err := skbn.Copy(src, dst, parallel, bufferSize, false, false); err != nil {
 		log.Fatal(err)
 	}
 	elapsed := time.Since(start)

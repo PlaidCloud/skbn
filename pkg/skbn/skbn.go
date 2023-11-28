@@ -1,6 +1,7 @@
 package skbn
 
 import (
+	"compress/gzip"
 	"context"
 	"fmt"
 	"io"
@@ -11,6 +12,7 @@ import (
 	"github.com/PlaidCloud/skbn/pkg/utils"
 
 	"github.com/djherbis/buffer"
+	"github.com/djherbis/nio"
 )
 
 // FromToPair is a pair of FromPath and ToPath
@@ -20,7 +22,7 @@ type FromToPair struct {
 }
 
 // Copy copies files from src to dst
-func Copy(src, dst string, parallel int, bufferSize float64, skipErrorFiles bool) error {
+func Copy(src, dst string, parallel int, bufferSize float64, skipErrorFiles bool, compress bool) error {
 	srcPrefix, srcPath := utils.SplitInTwo(src, "://")
 	dstPrefix, dstPath := utils.SplitInTwo(dst, "://")
 
@@ -36,7 +38,7 @@ func Copy(src, dst string, parallel int, bufferSize float64, skipErrorFiles bool
 	if err != nil {
 		return err
 	}
-	err = PerformCopy(srcClient, dstClient, srcPrefix, dstPrefix, fromToPaths, parallel, bufferSize, skipErrorFiles)
+	err = PerformCopy(srcClient, dstClient, srcPrefix, dstPrefix, fromToPaths, parallel, bufferSize, skipErrorFiles, compress)
 	if err != nil {
 		return err
 	}
@@ -102,7 +104,7 @@ func GetFromToPaths(srcClient interface{}, srcPrefix, srcPath, dstPath string) (
 }
 
 // PerformCopy performs the actual copy action
-func PerformCopy(srcClient, dstClient interface{}, srcPrefix, dstPrefix string, fromToPaths []FromToPair, parallel int, bufferSize float64, skipErrorFiles bool) error {
+func PerformCopy(srcClient, dstClient interface{}, srcPrefix, dstPrefix string, fromToPaths []FromToPair, parallel int, bufferSize float64, skipErrorFiles bool, compress bool) error {
 	// Execute in parallel
 	totalFiles := len(fromToPaths)
 	if parallel == 0 {
@@ -135,14 +137,26 @@ func PerformCopy(srcClient, dstClient interface{}, srcPrefix, dstPrefix string, 
 			pr, pw := nio.Pipe(buf)
 			fileErrorChannel := make(chan error, 1)
 
+			// TODO: make this OPTIONAL, and probably also add a decompress option?
+			// gw := gzip.NewWriter(pw)
+			var gw io.WriteCloser
+			if compress {
+				gw, _ = gzip.NewWriterLevel(pw, gzip.BestCompression)
+			} else {
+				gw = pw
+			}
+
 			log.Printf("[%s/%d] copy: %s://%s -> %s://%s", currentLinePadded, totalFiles, srcPrefix, fromPath, dstPrefix, toPath)
 
 			go func() {
 				defer pw.Close()
+				if compress {
+					defer gw.Close()
+				}
 				if !skipErrorFiles && len(errc) != 0 {
 					return
 				}
-				err := Download(srcClient, srcPrefix, fromPath, pw)
+				err := Download(srcClient, srcPrefix, fromPath, gw)
 				if err != nil {
 					log.Println(err, fmt.Sprintf(" src: file: %s", fromPath))
 					fileErrorChannel <- err
