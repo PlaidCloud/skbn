@@ -26,8 +26,8 @@ jobs:
       - name: Build skbn
         run: |
           DOCKER_USER=_json_key
-          DOCKER_PASSWORD=${{ secrets.GCR_JSON_KEY}}
-          DOCKER_TAG=${{ steps.docker_tag.outputs.tag}}
+          DOCKER_PASSWORD="${{ secrets.GCR_JSON_KEY }}"
+          DOCKER_TAG=${{ steps.docker_tag.outputs.tag }}
           make all
       # - name: Build and push
       #   id: docker_build
