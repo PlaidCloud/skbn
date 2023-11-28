@@ -91,6 +91,14 @@
   version = "v1.0"
 
 [[projects]]
+  digest = "1:afebb37dd2867d80ad37b0eba545d4299a62cb586feb094adf96c2cb6f0f4fbf"
+  name = "github.com/djherbis/nio"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "aee7de252b29483a2e4d9be99b4b3f39b20412a6"
+  version = "v3.0.1"
+
+[[projects]]
   digest = "1:58be7025fd84632dfbb8a398f931b5bdbbecc0390e4385df4ae56775487a0f87"
   name = "github.com/docker/spdystream"
   packages = [
@@ -450,14 +458,6 @@
   version = "v1.19.0"
 
 [[projects]]
-  digest = "1:5aebed51f26a49cb77a0c34d1328a0d29839e7a1204b14ff8e26a3df8ec61736"
-  name = "gopkg.in/djherbis/nio.v2"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "824ca9017eeb2a422fdda7ae9dba05d3ab019dfa"
-  version = "v2.0.3"
-
-[[projects]]
   digest = "1:ef72505cf098abdd34efeea032103377bec06abb61d8a06f002d5d296a4b1185"
   name = "gopkg.in/inf.v0"
   packages = ["."]
@@ -659,9 +659,9 @@
     "github.com/aws/aws-sdk-go/service/s3",
     "github.com/aws/aws-sdk-go/service/s3/s3manager",
     "github.com/djherbis/buffer",
+    "github.com/djherbis/nio",
     "github.com/spf13/cobra",
     "google.golang.org/api/iterator",
-    "gopkg.in/djherbis/nio.v2",
     "k8s.io/api/core/v1",
     "k8s.io/apimachinery/pkg/runtime",
     "k8s.io/client-go/kubernetes",
