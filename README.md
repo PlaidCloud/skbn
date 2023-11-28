@@ -6,6 +6,11 @@
 
 # Skbn
 
+This is a fork of [maorfr/skbn](https://github.com/maorfr/skbn) that adds a GZIP compression option for in-line compression of files as they are moved.
+
+This was added to better support use of cloud storage as a backup target.  The compression option is set to `BestCompression` to achieve the smallest possible backup size
+in order to minimize storage cost and network replication cost.
+
 Skbn is a tool for copying files and directories between Kubernetes and cloud storage providers. It is named after the 1981 video game [Sokoban](https://en.wikipedia.org/wiki/Sokoban).
 Skbn uses an in-memory buffer for the copy process, to avoid excessive memory consumption.
 Skbn currently supports the following providers:
@@ -71,7 +76,26 @@ skbn cp \
     --dst gcs://<bucket>/<path>
 ```
 
+### Copy files from Google Cloud Storage to Kubernetes
+
+```
+skbn cp \
+    --dst gcs://<bucket>/<path> \
+    --src k8s://<namespace>/<podName>/<containerName>/<path>
+```
+
 ## Advanced usage
+
+### Compress Files Using GZIP
+
+```
+skbn cp \
+    --src ... \
+    --dst ... \
+    --compress true
+```
+* The default setting for `compress` is `false`
+* This will compress using `BestCompression` which is a little slower but results in the smallest file sizes
 
 ### Copy files from source to destination in parallel
 
@@ -148,6 +172,13 @@ skbn cp \
 skbn cp \
     --src abs://<account>/<container>/<path> \
     --dst abs://<account>/<container>/<path>
+```
+
+### Copy files from Google Cloud Storage to Google Cloud Storage
+```
+skbn cp \
+    --src gcs://<bucket>/<path> \
+    --dst gcs://<bucket>/<path>
 ```
 
 ## Credentials
