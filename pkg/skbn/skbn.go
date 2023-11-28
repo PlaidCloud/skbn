@@ -8,7 +8,7 @@ import (
 	"math"
 	"path/filepath"
 
-	"github.com/maorfr/skbn/pkg/utils"
+	"github.com/PlaidCloud/skbn/pkg/utils"
 
 	"github.com/djherbis/buffer"
 )

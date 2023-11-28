@@ -1,4 +1,4 @@
-module github.com/maazghani/skbn
+module github.com/PlaidCloud/skbn
 
 go 1.18
 
