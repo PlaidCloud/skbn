@@ -1,5 +1,6 @@
 GIT_TAG := $(shell git describe --tags --always)
 GIT_COMMIT := $(shell git rev-parse --short HEAD)
+GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 LDFLAGS := "-X main.GitTag=${GIT_TAG} -X main.GitCommit=${GIT_COMMIT}"
 DIST := $(CURDIR)/dist
 DOCKER_USER := $(shell printenv DOCKER_USER)
@@ -22,7 +23,7 @@ build: fmt vet
 # Build skbn docker image
 docker: fmt vet
 	# cp bin/skbn skbn
-	docker build -t gcr.io/plaidcloud-build/skbn:latest -t gcr.io/plaidcloud-build/skbn:$(DOCKER_TAG) .
+	docker build -t gcr.io/plaidcloud-build/skbn:latest -t gcr.io/plaidcloud-build/skbn:$(GIT_BRANCH)-$(DOCKER_TAG) .
 	# rm skbn
 
 
@@ -33,7 +34,7 @@ ifdef DOCKER_USER
 ifdef DOCKER_PASSWORD
 	printenv DOCKER_PASSWORD | docker login -u $(DOCKER_USER) --password-stdin https://gcr.io
 	docker push gcr.io/plaidcloud-build/skbn:latest
-	docker push gcr.io/plaidcloud-build/skbn:$(DOCKER_TAG)
+	docker push gcr.io/plaidcloud-build/skbn:$(GIT_BRANCH)-$(DOCKER_TAG)
 endif
 endif
 # endif
